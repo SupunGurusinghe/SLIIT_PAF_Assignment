@@ -29,6 +29,34 @@ function onItemSaveComplete(response, status)
 	$("#formItem")[0].reset(); 
 }
 
+
+function onItemDeleteComplete(response, status) 
+{ 
+	if (status == "success") 
+	{ 
+		var resultSet = JSON.parse(response); 
+		if (resultSet.status.trim() == "success") 
+		{ 
+			$("#alertSuccess").text("Successfully deleted."); 
+			$("#alertSuccess").show(); 
+			$("#divItemsGrid").html(resultSet.data); 
+		} else if (resultSet.status.trim() == "error") 
+		{ 
+			$("#alertError").text(resultSet.data); 
+			$("#alertError").show(); 
+		} 
+	} else if (status == "error") 
+	{ 
+		$("#alertError").text("Error while deleting."); 
+		$("#alertError").show(); 
+	} else
+	{ 
+		$("#alertError").text("Unknown error while deleting.."); 
+		$("#alertError").show(); 
+	} 
+}
+
+
 $(document).ready(function() 
 { 
 	if ($("#alertSuccess").text().trim() == "") 
@@ -72,13 +100,33 @@ $(document).on("click", "#btnSave", function(event)
 
 // UPDATE==========================================
 $(document).on("click", ".btnUpdate", function(event) 
-{ 
-	$("#hidItemIDSave").val($(this).closest("tr").find('#hidItemIDUpdate').val()); 
-	$("#itemCode").val($(this).closest("tr").find('td:eq(0)').text()); 
-	$("#itemName").val($(this).closest("tr").find('td:eq(1)').text()); 
-	$("#itemPrice").val($(this).closest("tr").find('td:eq(2)').text()); 
-	$("#itemDesc").val($(this).closest("tr").find('td:eq(3)').text()); 
+{ 		
+	$("#type").val($(this).closest("tr").find('td:eq(0)').text()); 
+	$("#kwh").val($(this).closest("tr").find('td:eq(1)').text()); 
+	$("#fixed").val($(this).closest("tr").find('td:eq(2)').text()); 
+	$("#fuel").val($(this).closest("tr").find('td:eq(3)').text()); 
+	$("#rebate").val($(this).closest("tr").find('td:eq(4)').text()); 
+	$("#tax").val($(this).closest("tr").find('td:eq(5)').text()); 
+	$("#total").val($(this).closest("tr").find('td:eq(6)').text()); 
+	$("#hidItemIDSave").val($(this).closest("tr").find('td:eq(0)').text()); 
 }); 
+
+
+// REMOVE==========================================
+$(document).on("click", ".btnRemove", function(event) 
+{ 
+	$.ajax( 
+	{ 
+		url : "BillAutomationAPI", 
+		type : "DELETE", 
+		data : "type=" + $(this).data("itemid"),
+		dataType : "text", 
+		complete : function(response, status) 
+		{ 
+			onItemDeleteComplete(response.responseText, status); 
+		} 
+	}); 
+});
 
 
 // CLIENT-MODEL================================================================
@@ -103,8 +151,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for KWH charge."; 
 	} 
-	// convert to decimal price
-	$("#kwh").val(parseFloat(kwhCharge).toFixed(2));
 
 	// FIXED
 	if ($("#fixed").val().trim() == "") 
@@ -118,8 +164,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for fixed charge."; 
 	} 
-	// convert to decimal price
-	$("#fixed").val(parseFloat(fixedCharge).toFixed(2));
 	
 	// FUEL
 	if ($("#fuel").val().trim() == "") 
@@ -133,8 +177,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for fuel charge."; 
 	} 
-	// convert to decimal price
-	$("#fuel").val(parseFloat(fuelCharge).toFixed(2));
 	
 	// REBATE
 	if ($("#rebate").val().trim() == "") 
@@ -148,8 +190,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for rebate."; 
 	} 
-	// convert to decimal price
-	$("#rebate").val(parseFloat(rebate).toFixed(2));
 	
 	// TAX
 	if ($("#tax").val().trim() == "") 
@@ -163,8 +203,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for tax."; 
 	} 
-	// convert to decimal price
-	$("#tax").val(parseFloat(taxAmount).toFixed(2));
 	
 	// TOTAL
 	if ($("#total").val().trim() == "") 
@@ -178,8 +216,6 @@ function validateItemForm()
 	{ 
 		return "Insert a numerical value for total."; 
 	} 
-	// convert to decimal price
-	$("#total").val(parseFloat(totalAmount).toFixed(2));
 	
 	return true; 
 }
