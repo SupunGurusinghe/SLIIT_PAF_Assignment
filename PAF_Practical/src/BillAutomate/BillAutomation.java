@@ -49,7 +49,9 @@ public class BillAutomation {
 					+ "<th>Fuel Charges</th>" 
 					+ "<th>Rebate</th>"
 					+ "<th>Tax Amount</th>"
-					+ "<th>Total Amount</th></tr>"; 
+					+ "<th>Total Amount</th>"
+					+ "<th>Update</th>"
+					+ "<th>Remove</th></tr>"; 
 			 
 			String query = "select * from perunit"; 
 			Statement stmt = con.createStatement(); 
@@ -73,6 +75,11 @@ public class BillAutomation {
 				output += "<td>" + Rebate + "</td>"; 
 				output += "<td>" + Tax + "</td>"; 
 				output += "<td>" + Total + "</td>"; 
+				
+				output += "<td><input name='btnUpdate' type='button' value='Update' "
+						+ "class='btnUpdate btn btn-secondary' data-itemid='" + billType + "'></td>"
+						+ "<td><input name='btnRemove' type='button' value='Remove' "
+						+ "class='btnRemove btn btn-danger' data-itemid='" + billType + "'></td></tr>"; 
 			} 
 			
 			con.close(); 
@@ -173,21 +180,13 @@ public class BillAutomation {
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
-				return "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:brown;'>Error while connecting to the database for inserting.</h4></div>"
-						+ "</body></html>";
+				return "Error while connecting to the database for inserting.";
 			}
 			
 			double tot = Double.parseDouble(KWH) + Double.parseDouble(Fixed) + Double.parseDouble(Fuel) + Double.parseDouble(Rebate) + Double.parseDouble(Tax);
 			// verify total
 			if (tot != Double.parseDouble(Total)) {
-				output = "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:red;'>Total Mismatch</h4></div>"
-						+ "</body></html>";
+				output = "{\"status\":\"error\", \"data\": \"Total missmatch.\"}"; 
 				return output;
 			}
 			// create a prepared statement
@@ -205,18 +204,12 @@ public class BillAutomation {
 			// execute the statement
 			preparedStmt.execute(); 
 			con.close(); 
-			output = "<html><head><title>Per Unit Page</title>"
-					+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-					+ "</head><body>"
-					+ "<div class='card'><h4 class='text-center' style='color:green;'>Inserted successfully</h4></div>"
-					+ "</body></html>"; 
+			String newItems = readPerUnit();
+			output = "{\"status\":\"success\", \"data\": \"" + 
+					 newItems + "\"}"; 
 		} 
 		catch (Exception e) { 
-			output = "<html><head><title>Per Unit Page</title>"
-					+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-					+ "</head><body>"
-					+ "<div class='card'><h4 class='text-center' style='color:red;'>Error while inserting</h4></div>"
-					+ "</body></html>"; 
+			output = "{\"status\":\"error\", \"data\": \"Error while inserting the bill type.\"}"; 
 			System.err.println(e.getMessage()); 
 		} 
 		return output; 
