@@ -32,17 +32,11 @@ public class BillAutomation {
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
-				return "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:brown;'>Error while connecting to the database for reading.</h4></div>"
-						+ "</body></html>";
+				return "Error while connecting to the database for reading.";
 			} 
 				
 			// Prepare the HTML table to be displayed
-			output = "<html><head><title>Per Unit Page</title>"
-					+ "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">"
-					+ "</head><body><table class='table' border='1'><tr>"
+			output = "<table class='table' border='1'><tr>"
 					+ "<th>Bill Type</th>"
 					+ "<th>KWH Charges</th>" 
 					+ "<th>Fixed Charges</th>" 
@@ -85,14 +79,10 @@ public class BillAutomation {
 			con.close(); 
 			
 			// Complete the HTML table
-			output += "</table></body></html>"; 
+			output += "</table>"; 
 		} 
 		catch (Exception e) { 
-			output = "<html><head><title>Per Unit Page</title>"
-					+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-					+ "</head><body>"
-					+ "<div class='card'><h4 class='text-center' style='color:red;'>Error while reading.</h4></div>"
-					+ "</body></html>";
+			output = "Error while reading.";
 			System.err.println(e.getMessage()); 
 		} 
 		return output; 
@@ -103,32 +93,24 @@ public class BillAutomation {
 	public String readPerUnitBySearch(String billtype) { 
 		String output = "";
 		if(!billtype.equals("Residential") && !billtype.equals("Commercial"))
-			return "<html><head><title>Per Unit Page</title>"
-					+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-					+ "</head><body>"
-					+ "<div class='card'><h4 class='text-center' style='color:red;'>Incorrect bill type</h4></div>"
-					+ "</body></html>"; 	
+			return "Incorrect bill type"; 	
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
-				return "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:brown;'>Error while connecting to the database for reading.</h4></div>"
-						+ "</body></html>";
+				return "Error while connecting to the database for reading.";
 			} 
 			
 			// Prepare the HTML table to be displayed
-			output = "<html><head><title>Per Unit Page</title>"
-					+ "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">"
-					+ "</head><body><table class='table' border='1'><tr>"
+			output = "<table class='table' border='1'><tr>"
 					+ "<th>Bill Type</th>"
 					+ "<th>KWH Charges</th>" 
 					+ "<th>Fixed Charges</th>" 
 					+ "<th>Fuel Charges</th>" 
 					+ "<th>Rebate</th>"
 					+ "<th>Tax Amount</th>"
-					+ "<th>Total Amount</th></tr>"; 
+					+ "<th>Total Amount</th>"
+					+ "<th>Update</th>"
+					+ "<th>Remove</th></tr>"; 
 			 
 			String query = "select * from perunit where type='" + billtype + "'"; 
 			Statement stmt = con.createStatement(); 
@@ -151,20 +133,21 @@ public class BillAutomation {
 				output += "<td>" + Fuel + "</td>"; 
 				output += "<td>" + Rebate + "</td>"; 
 				output += "<td>" + Tax + "</td>"; 
-				output += "<td>" + Total + "</td>"; 				
+				output += "<td>" + Total + "</td>"; 
+				
+				output += "<td><input name='btnUpdate' type='button' value='Update' "
+						+ "class='btnUpdate btn btn-secondary' data-itemid='" + billType + "'></td>"
+						+ "<td><input name='btnRemove' type='button' value='Remove' "
+						+ "class='btnRemove btn btn-danger' data-itemid='" + billType + "'></td></tr>"; 
 			}else {
-				return "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:red;'>Incorrect Bill Type</h4></div>"
-						+ "</body></html>";
+				return "Incorrect Bill Type";
 			}
 			
 			
 			con.close(); 
 			
 			// Complete the HTML table
-			output += "</table></body></html>"; 
+			output += "</table>"; 
 		} 
 		catch (Exception e) { 
 			output = "Error while reading the items."; 
@@ -218,10 +201,6 @@ public class BillAutomation {
 	//Update Per Unit
 	public String updatePerUnit(String billType, String KWH, String Fixed, String Fuel, String Rebate, String Tax, String Total) { 
 		String output = ""; 
-		if(!billType.equals("Residential") && !billType.equals("Commercial")) {
-			output = "{\"status\":\"error\", \"data\": \"Incorrect bill type.\"}"; 
-			return output; 	
-		}
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
@@ -231,11 +210,7 @@ public class BillAutomation {
 			double tot = Double.parseDouble(KWH) + Double.parseDouble(Fixed) + Double.parseDouble(Fuel) + Double.parseDouble(Rebate) + Double.parseDouble(Tax);
 			// verify total
 			if (tot != Double.parseDouble(Total)) {
-				output = "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:red;'>Total Mismatch</h4></div>"
-						+ "</body></html>";
+				output = "Total Mismatch";
 				return output;
 			}
 			
@@ -268,11 +243,7 @@ public class BillAutomation {
 	
 	//Delete Per Unit
 	public String deletePerUnit(String billType) { 
-		String output = ""; 
-		if(!billType.equals("Residential") && !billType.equals("Commercial")) {
-			output = "{\"status\":\"error\", \"data\": \"Incorrect bill type.\"}"; 
-			return output; 		
-		}
+		String output = ""; 		
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
@@ -307,11 +278,7 @@ public class BillAutomation {
 		try { 
 			Connection con = connect(); 
 			if (con == null) {
-				return "<html><head><title>Per Unit Page</title>"
-						+ "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC' crossorigin='anonymous'>"
-						+ "</head><body>"
-						+ "<div class='card'><h4 class='text-center' style='color:brown;'>Error while connecting to the database for reading.</h4></div>"
-						+ "</body></html>";
+				return "Error while connecting to the database for reading.";
 			} 
 			
 			 

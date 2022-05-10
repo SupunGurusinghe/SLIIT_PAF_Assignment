@@ -135,7 +135,7 @@ function validateItemForm()
 	// TYPE
 	if ($("#type").val().trim() == "") 
 	{ 
-		return "Insert Type."; 
+		return "Insert a bill type first."; 
 	} 
 
 
