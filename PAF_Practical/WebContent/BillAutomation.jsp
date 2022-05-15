@@ -15,19 +15,32 @@
 <body>
 
 		<!---------------------- Navigation bar ------------------------------>
-	
+		
+		<header>
+        <div class="navbar">
+            <div class="brand-title">Electro Grid</div>
+            <p href="#" class="toggle-button">
+                <i id="navbar-icon" class="fas fa-bars"></i>
+            </p>
+            <div class="navbar-links">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Service</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    	</header>
 		
 		<!---------------------- End of Navigation bar ------------------------------>
 		
 	
 
 	<div class="container"><div class="row"><div class="col-sm">
-	<div style="margin-bottom: 50px; margin-top: 30px;">
-		<div id="aligning-r"><form class="form-inline">
-	    	<input class="form-control mr-sm-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
-	    	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-	  	</form></div></div>
-	  	
+	<div style="margin-top: 30px;"></div>
+	  	<div class="card" style="padding: 30px; background: rgba(0, 0, 0, 0.2);">
 		<h1>Per Unit Details for Each Bill Type</h1>
 		<hr>
 		<br>
@@ -87,7 +100,7 @@
 				BillAutomation itemObj = new BillAutomation(); 
 				out.print(itemObj.readPerUnit()); 
 			%>
-		</div>
+		</div></div>
 	</div></div></div>
 </body>
 </html>
