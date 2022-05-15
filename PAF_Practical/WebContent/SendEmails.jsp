@@ -7,6 +7,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+<link rel="stylesheet" href="Views/BillAutomation.css">
 <link rel="stylesheet" href="Views/bootstrap.min.css">
 <script src="Components/jquery-3.6.0.min.js"></script>
 <script src="Components/emails.js"></script>
@@ -38,15 +39,6 @@
 		<div id="alertError" class="alert alert-danger"></div>		
 	<br>
 	
-	<% 
-		Email itemObj = new Email(); 
-		String accNo = request.getParameter("search");
-		if (accNo != null){		
-			out.print(itemObj.sendEmail(accNo)); }
-		else {
-			out.print(itemObj.sendEmailToAll());
-		}
-	%>
 	</div></div></div>	
 </body>
 </html>
