@@ -1,8 +1,8 @@
 @charset "ISO-8859-1";
 
-
 body {
-	background-color: #F0F8FF;
+ 	background-image: url("../Images/eg.png");
+ 	background-size:cover;
 }
 
 #aligning-r {
